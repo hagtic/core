@@ -26,6 +26,7 @@ use OCP\Files\External\Auth\AuthMechanism;
 use OCP\Files\External\Backend\Backend as ExternalBackend;
 use OCP\Files\External\DefinitionParameter;
 use OCP\Files\External\IStorageConfig;
+use OCP\Files\External\IStoragesBackendService;
 use OCP\IL10N;
 use OCP\IUser;
 
@@ -48,7 +49,10 @@ class SMB2 extends ExternalBackend {
 				(new DefinitionParameter('service-account-password', $l->t('Service Account Password')))
 					->setType(DefinitionParameter::VALUE_PASSWORD),
 			])
-			->addAuthScheme(AuthMechanism::SCHEME_PASSWORD)
+			// only password::sessioncredentials is reasonable
+			->addAuthScheme('password::sessioncredentials')
+			->setVisibility(IStoragesBackendService::VISIBILITY_ADMIN)
+			->setAllowedVisibility(IStoragesBackendService::VISIBILITY_ADMIN)
 		;
 	}
 
